@@ -1,0 +1,4 @@
+Web service for creating a linked user oauth2
+------------------------------------------
+
+This is to fix a bug that allows identity theft in Moodle when the OAuth2 identity provider allows the use of the same email for multiple users.
