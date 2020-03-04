@@ -12,9 +12,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$plugin->version  = 2019053001;   // The (date) version of this module + 2 extra digital for daily versions
+$plugin->version  = 2020030500;   // The (date) version of this module + 2 extra digital for daily versions
 $plugin->requires = 2018051700;  // Requires this Moodle version - at least 2.0
 $plugin->component = 'local_linkeduser';
 $plugin->cron     = 0;
-$plugin->release = '1.0 (Build: 2019053000)';
+$plugin->release = '1.1 (Build: 2020030300)';
 $plugin->maturity = MATURITY_STABLE;
