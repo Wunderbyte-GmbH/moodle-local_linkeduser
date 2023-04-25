@@ -47,10 +47,33 @@ class updatelinkedlogin {
      */
     public static function update_linkedlogin(int $userid):bool {
 
-        global $DB;
+        global $DB, $USER;
 
-        $user = $DB->get_record('user', ['id' => $userid]);
-        $loginuser = $DB->get_record('auth_oauth2_linked_login', ['userid' => $userid]);
+        if (!$user = $DB->get_record('user', ['id' => $userid])) {
+            return false;
+        }
+        if (!$loginuser = $DB->get_record('auth_oauth2_linked_login', ['userid' => $userid])) {
+
+            // If we don't have a login yet, we create it.
+
+            $now = time();
+
+            $newuser = (object)[
+                'userid' => $user->id,
+                'email' => $user->email,
+                'username' => $user->username,
+                'issuerid' => 1,
+                'timecreated' => $now,
+                'timemodified' => $now,
+                'confirmtoken' => '',
+                'confirmtokenexpires' => 0,
+                'usermodified' => $USER->id,
+            ];
+
+            $DB->insert_record('auth_oauth2_linked_login', $newuser);
+
+            return false;
+        }
 
         // If the new user e-mail is not the same as the old one...
         if ($user->email !== $loginuser->email
