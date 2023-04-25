@@ -39,7 +39,7 @@ class updatelinkedlogin {
     /**
      *
      * This function compares the entry for a given user with the oauth table.
-     * If we find the email is not the same, update the oauth table.
+     * If we find the email or username are not the same, update the oauth table.
      *
      * @param int $userid
      *
@@ -53,10 +53,13 @@ class updatelinkedlogin {
         $loginuser = $DB->get_record('auth_oauth2_linked_login', ['userid' => $userid]);
 
         // If the new user e-mail is not the same as the old one...
-        if ($user->email !== $loginuser->email) {
+        if ($user->email !== $loginuser->email
+            || $user->username !== $loginuser->username) {
             // Update the email in the login table.
 
             $loginuser->email = $user->email;
+            $loginuser->username = $user->username;
+
             $DB->update_record('auth_oauth2_linked_login', $loginuser);
         }
 
