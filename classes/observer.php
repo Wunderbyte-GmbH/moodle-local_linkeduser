@@ -36,15 +36,17 @@ class local_updatelinkedlogin_observer {
      * And set it to error, if it was pending.
      *
      * @param \core\event\base $event
-     * @return string
+     * @return bool
      */
     public static function user_updated(\core\event\base $event): string {
         $data = $event->get_data();
 
-        $userid = $data['userid'];
+        if (!$userid = $data['relateduserid']) {
+            return false;
+        }
 
         updatelinkedlogin::update_linkedlogin($userid);
 
-        return 'x';
+        return true;
     }
 }
