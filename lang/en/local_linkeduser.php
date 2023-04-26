@@ -1,5 +1,5 @@
 <?php
-// This file is part of Moodle - https://moodle.org/
+// This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -12,20 +12,13 @@
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <https://www.gnu.org/licenses/>.
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version and other meta-data are defined here.
- *
- * @package     local_updatelinkedlogin
- * @copyright   2023 Georg Maißer, David Bogner <info@wunderbyte.at>
- * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Web service template plugin related strings
+ * @package   local_linkeduser
+ * @copyright 2019 David Bogner
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-$plugin->component = 'local_linkeduser';
-$plugin->release = '1.2.0';
-$plugin->version = 2023042502;
-$plugin->requires = 2022112800;
-$plugin->maturity = MATURITY_ALPHA;
+$string['pluginname'] = 'Create OAuth2 linked users';
