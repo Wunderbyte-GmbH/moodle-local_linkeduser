@@ -49,7 +49,7 @@ class updatelinkedlogin {
 
         global $DB, $USER;
 
-        if (!$user = $DB->get_record('user', ['id' => $userid, 'auth' => 'oauth'])) {
+        if (!$user = $DB->get_record('user', ['id' => $userid, 'auth' => 'oauth2'])) {
             return false;
         }
         if (!$loginuser = $DB->get_record('auth_oauth2_linked_login', ['userid' => $userid])) {
