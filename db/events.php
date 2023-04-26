@@ -17,7 +17,7 @@
 /**
  * Plugin event observers are registered here.
  *
- * @package     local_updatelinkedlogin
+ * @package     local_linkeduser
  * @category    event
  * @copyright   2023 Georg Maißer <info@wunderbyte.at>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,6 +29,6 @@ $observers = array(
 
     array(
         'eventname' => '\core\event\user_updated',
-        'callback' => 'local_updatelinkedlogin_observer::user_updated',
+        'callback' => 'local_linkeduser_observer::user_updated',
     ),
 );

@@ -17,18 +17,18 @@
 /**
  * Event observers used in forum.
  *
- * @package    local_updatelinkedlogin
+ * @package    local_linkeduser
  * @copyright  2023 Gerog Maißer <info@wunderbyte.at>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_updatelinkedlogin\shopping_cart_history;
-use local_updatelinkedlogin\updatelinkedlogin;
+use local_linkeduser\shopping_cart_history;
+use local_linkeduser\updatelinkedlogin;
 
 /**
- * Event observer for local_updatelinkedlogin.
+ * Event observer for local_linkeduser.
  */
-class local_updatelinkedlogin_observer {
+class local_linkeduser_observer {
 
     /**
      * Triggered via payment_error event from any payment provider

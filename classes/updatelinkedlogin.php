@@ -17,13 +17,13 @@
 /**
  * class to do the work.
  *
- * @package local_updatelinkedlogin
+ * @package local_linkeduser
  * @author Georg Maißer
  * @copyright 2023 Wunderbyte GmbH
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-namespace local_updatelinkedlogin;
+namespace local_linkeduser;
 
 defined('MOODLE_INTERNAL') || die();
 

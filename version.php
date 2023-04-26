@@ -17,7 +17,7 @@
 /**
  * Plugin version and other meta-data are defined here.
  *
- * @package     local_updatelinkedlogin
+ * @package     local_linkeduser
  * @copyright   2023 Georg Maißer, David Bogner <info@wunderbyte.at>
  * @license     https://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
