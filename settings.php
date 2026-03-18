@@ -43,5 +43,23 @@ if ($hassiteconfig) {
         PARAM_TEXT
     ));
 
+    // Link to the bulk-add page.
+    $bulkaddurl = new moodle_url('/local/linkeduser/bulkaddlinkedlogin.php');
+    $settings->add(new admin_setting_description(
+        'local_linkeduser/bulkaddlinkedloginlink',
+        get_string('bulkaddlinkedlogin', 'local_linkeduser'),
+        html_writer::link($bulkaddurl, get_string('bulkaddlinkedlogin_link', 'local_linkeduser'),
+            ['class' => 'btn btn-secondary'])
+    ));
+
     $ADMIN->add('localplugins', $settings);
+
+    // Register the bulk-add page as an external admin page so that
+    // admin_externalpage_setup() can locate it and set up navigation.
+    $ADMIN->add('localplugins', new admin_externalpage(
+        'local_linkeduser_bulkaddlinkedlogin',
+        get_string('bulkaddlinkedlogin', 'local_linkeduser'),
+        new moodle_url('/local/linkeduser/bulkaddlinkedlogin.php'),
+        'moodle/site:config'
+    ));
 }
