@@ -15,12 +15,25 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Web service template plugin related strings
- * @package   local_linkeduser
- * @copyright 2019 David Bogner
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * Plugin administration settings are defined here.
+ *
+ * @package     local_linkeduser
+ * @category    admin
+ * @copyright   2024 Wunderbyte GmbH <info@wunderbyte.at>
+ * @license     http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Create OAuth2 linked users';
-$string['useidpemail'] = 'Use Identity Provider email';
-$string['useidpemail_desc'] = 'When enabled, the email address from the OAuth2 Identity Provider will be written to the Moodle user table. When disabled (default), the existing local email address in the user table is kept and the linked login record is updated to match it.';
+defined('MOODLE_INTERNAL') || die();
+
+if ($hassiteconfig) {
+    $settings = new admin_settingpage('local_linkeduser', get_string('pluginname', 'local_linkeduser'));
+
+    $settings->add(new admin_setting_configcheckbox(
+        'local_linkeduser/useidpemail',
+        get_string('useidpemail', 'local_linkeduser'),
+        get_string('useidpemail_desc', 'local_linkeduser'),
+        0
+    ));
+
+    $ADMIN->add('localplugins', $settings);
+}
