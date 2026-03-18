@@ -35,5 +35,13 @@ if ($hassiteconfig) {
         0
     ));
 
+    $settings->add(new admin_setting_configtext(
+        'local_linkeduser/idpusernameprefix',
+        get_string('idpusernameprefix', 'local_linkeduser'),
+        get_string('idpusernameprefix_desc', 'local_linkeduser'),
+        '',
+        PARAM_TEXT
+    ));
+
     $ADMIN->add('localplugins', $settings);
 }

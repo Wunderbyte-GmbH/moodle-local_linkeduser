@@ -43,6 +43,11 @@ class updatelinkedlogin {
      * (auth_oauth2_linked_login) is written back to the user table.
      * Otherwise (default), the oauth table is updated to match the user table.
      *
+     * When the 'idpusernameprefix' setting is configured, the Identity Provider
+     * username is derived by prepending the prefix to the local username (lowercased).
+     * For example, with prefix "tinit_" and local username "rssmra98d08h501h", the
+     * linked login record will use the username "tinit_rssmra98d08h501h".
+     *
      * @param int $userid
      *
      * @return bool
@@ -54,6 +59,12 @@ class updatelinkedlogin {
         if (!$user = $DB->get_record('user', ['id' => $userid, 'auth' => 'oauth2'])) {
             return false;
         }
+
+        // Determine the expected IdP username, applying any configured prefix.
+        $idpusernameprefix = get_config('local_linkeduser', 'idpusernameprefix');
+        $idpusernameprefix = !empty($idpusernameprefix) ? trim($idpusernameprefix) : '';
+        $expectedidpusername = strtolower($idpusernameprefix . $user->username);
+
         if (!$loginuser = $DB->get_record('auth_oauth2_linked_login', ['userid' => $userid])) {
 
             // If we don't have a login yet, we create it.
@@ -63,7 +74,7 @@ class updatelinkedlogin {
             $newuser = (object)[
                 'userid' => $user->id,
                 'email' => $user->email,
-                'username' => $user->username,
+                'username' => $expectedidpusername,
                 'issuerid' => 1,
                 'timecreated' => $now,
                 'timemodified' => $now,
@@ -88,9 +99,9 @@ class updatelinkedlogin {
         } else {
             // Default: keep local email and update the linked login record to match the user table.
             if ($user->email !== $loginuser->email
-                || $user->username !== $loginuser->username) {
+                || $loginuser->username !== $expectedidpusername) {
                 $loginuser->email = $user->email;
-                $loginuser->username = $user->username;
+                $loginuser->username = $expectedidpusername;
 
                 $DB->update_record('auth_oauth2_linked_login', $loginuser);
             }
