@@ -109,4 +109,69 @@ class updatelinkedlogin {
 
         return true;
     }
+
+    /**
+     * Add a linked login record for every non-deleted user whose username
+     * matches the given PHP regular expression.
+     *
+     * Already-linked users are left unchanged and counted as skipped.
+     * The configured 'idpusernameprefix' is applied exactly as in
+     * update_linkedlogin().
+     *
+     * @param string $regex  PHP regex pattern (without delimiters), e.g.
+     *                       '^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$'
+     * @return array         Associative array with keys 'added' and 'skipped'
+     */
+    public static function bulk_add_linkedlogin_for_matching_users(string $regex): array {
+        global $DB, $USER;
+
+        $idpusernameprefix = get_config('local_linkeduser', 'idpusernameprefix');
+        $idpusernameprefix = !empty($idpusernameprefix) ? trim($idpusernameprefix) : '';
+
+        // Retrieve all active, non-deleted users.
+        $users = $DB->get_records('user', ['deleted' => 0, 'suspended' => 0], '', 'id, username, email');
+
+        $added   = 0;
+        $skipped = 0;
+
+        foreach ($users as $user) {
+            // Skip guest and admin-type accounts that have no real username.
+            if (isguestuser($user->id)) {
+                continue;
+            }
+
+            if (@preg_match('~' . $regex . '~', $user->username) !== 1) {
+                continue;
+            }
+
+            // Skip users that already have a linked login record.
+            if ($DB->record_exists('auth_oauth2_linked_login', ['userid' => $user->id])) {
+                $skipped++;
+                continue;
+            }
+
+            $now = time();
+            $expectedidpusername = strtolower($idpusernameprefix . $user->username);
+
+            $newlogin = (object)[
+                'userid'               => $user->id,
+                'email'                => $user->email,
+                'username'             => $expectedidpusername,
+                // Issuer ID 1 is used for consistency with update_linkedlogin().
+                // Administrators should ensure the primary OAuth2 issuer has ID 1,
+                // or configure the issuer separately if needed.
+                'issuerid'             => 1,
+                'timecreated'          => $now,
+                'timemodified'         => $now,
+                'confirmtoken'         => '',
+                'confirmtokenexpires'  => 0,
+                'usermodified'         => $USER->id,
+            ];
+
+            $DB->insert_record('auth_oauth2_linked_login', $newlogin);
+            $added++;
+        }
+
+        return ['added' => $added, 'skipped' => $skipped];
+    }
 }
