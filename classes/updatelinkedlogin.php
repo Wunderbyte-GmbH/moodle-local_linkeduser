@@ -39,7 +39,9 @@ class updatelinkedlogin {
     /**
      *
      * This function compares the entry for a given user with the oauth table.
-     * If we find the email or username are not the same, update the oauth table.
+     * If the 'useidpemail' setting is enabled, the email from the Identity Provider
+     * (auth_oauth2_linked_login) is written back to the user table.
+     * Otherwise (default), the oauth table is updated to match the user table.
      *
      * @param int $userid
      *
@@ -75,15 +77,23 @@ class updatelinkedlogin {
             return false;
         }
 
-        // If the new user e-mail is not the same as the old one...
-        if ($user->email !== $loginuser->email
-            || $user->username !== $loginuser->username) {
-            // Update the email in the login table.
+        $useidpemail = get_config('local_linkeduser', 'useidpemail');
 
-            $loginuser->email = $user->email;
-            $loginuser->username = $user->username;
+        if ((bool)$useidpemail) {
+            // Use the Identity Provider email: update the user table from the linked login record.
+            if ($user->email !== $loginuser->email) {
+                $user->email = $loginuser->email;
+                $DB->update_record('user', $user);
+            }
+        } else {
+            // Default: keep local email and update the linked login record to match the user table.
+            if ($user->email !== $loginuser->email
+                || $user->username !== $loginuser->username) {
+                $loginuser->email = $user->email;
+                $loginuser->username = $user->username;
 
-            $DB->update_record('auth_oauth2_linked_login', $loginuser);
+                $DB->update_record('auth_oauth2_linked_login', $loginuser);
+            }
         }
 
         return true;
