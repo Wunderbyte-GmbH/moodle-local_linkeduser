@@ -1,8 +1,46 @@
-# Update linked login #
+# Update linked login (local_linkeduser) #
 
-TODO Describe the plugin shortly here.
+This Moodle local plugin manages the synchronisation between local Moodle user
+accounts and their OAuth2 Identity Provider (IdP) linked login records. It
+prevents identity-theft scenarios that can arise when an OAuth2 provider allows
+multiple users to share the same email address.
 
-TODO Provide more detailed description here.
+## Features ##
+
+### Keep local email vs. use IdP email ###
+
+By default the plugin keeps the email address stored in the Moodle `user` table
+and updates the `auth_oauth2_linked_login` record to match it. Enabling the
+**"Use Identity Provider email"** admin setting reverses this: the IdP email is
+written back to the Moodle user record instead.
+
+### Identity Provider username prefix ###
+
+Some Identity Providers prefix local usernames with a string before returning
+them. For example:
+
+| Where        | Username                |
+|--------------|-------------------------|
+| Local Moodle | `rssmra98d08h501h`      |
+| IdP           | `tinit_rssmra98d08h501h` |
+
+The **"Identity Provider username prefix"** setting lets you specify the prefix
+(e.g. `tinit_`). When set, the plugin constructs the expected IdP username by
+lowercasing `<prefix><local_username>` and stores it in the linked login record.
+This ensures Moodle can correctly match the incoming IdP credential to the right
+local account.
+
+Leave the setting empty when usernames are identical between Moodle and the IdP.
+
+## Admin settings ##
+
+Navigate to **Site administration → Plugins → Local plugins → Create OAuth2
+linked users** to configure the plugin.
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| Use Identity Provider email | Off | When enabled the IdP email overwrites the local Moodle email. |
+| Identity Provider username prefix | *(empty)* | Prefix prepended by the IdP to local usernames (e.g. `tinit_`). |
 
 ## Installing via uploaded ZIP file ##
 

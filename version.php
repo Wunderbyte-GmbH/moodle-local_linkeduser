@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $plugin->component = 'local_linkeduser';
-$plugin->release = '1.2.0';
-$plugin->version = 2023042502;
-$plugin->requires = 2021051700;
-$plugin->maturity = MATURITY_ALPHA;
+$plugin->release = '1.3.0';
+$plugin->version = 2024112500;
+$plugin->requires = 2024100700;
+$plugin->maturity = MATURITY_STABLE;
