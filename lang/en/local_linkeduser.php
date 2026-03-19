@@ -33,3 +33,5 @@ $string['bulkaddlinkedlogin_result'] = 'Done. Linked logins added: {$a->added}. 
 $string['usernameregex'] = 'Username regular expression';
 $string['usernameregex_help'] = 'Enter a PHP regular expression (without delimiters) to match usernames. All non-deleted, non-suspended users whose username matches this pattern will have a linked login record created if they do not already have one. Example default pattern matches the Italian fiscal code format.';
 $string['invalidregex'] = 'The regular expression is not valid.';
+$string['issuerid'] = 'OAuth2 Issuer';
+$string['issuerid_desc'] = 'Select the OAuth2 Identity Provider (issuer) to use when creating linked login records. The dropdown lists all configured OAuth2 issuers by name. If no issuers are configured yet, add them under Site administration > Server > OAuth 2 services.';

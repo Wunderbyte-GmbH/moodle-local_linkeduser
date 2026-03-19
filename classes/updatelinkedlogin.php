@@ -39,6 +39,20 @@ defined('MOODLE_INTERNAL') || die();
 class updatelinkedlogin {
 
     /**
+     * Return the configured OAuth2 issuer ID.
+     *
+     * Reads the 'issuerid' plugin setting and falls back to 1 when the setting
+     * has not been saved yet (e.g. immediately after plugin installation), so
+     * that existing behaviour is preserved.
+     *
+     * @return int
+     */
+    private static function get_configured_issuer_id(): int {
+        $issuerid = (int)get_config('local_linkeduser', 'issuerid');
+        return $issuerid > 0 ? $issuerid : 1;
+    }
+
+    /**
      *
      * This function compares the entry for a given user with the oauth table.
      * If the 'useidpemail' setting is enabled, the email from the Identity Provider
@@ -74,12 +88,13 @@ class updatelinkedlogin {
             // If we don't have a login yet, we create it.
 
             $now = time();
+            $issuerid = self::get_configured_issuer_id();
 
             $newuser = (object)[
                 'userid' => $user->id,
                 'email' => $user->email,
                 'username' => $expectedidpusername,
-                'issuerid' => 1,
+                'issuerid' => $issuerid,
                 'timecreated' => $now,
                 'timemodified' => $now,
                 'confirmtoken' => '',
@@ -131,6 +146,7 @@ class updatelinkedlogin {
 
         $idpusernameprefix = get_config('local_linkeduser', 'idpusernameprefix');
         $idpusernameprefix = !empty($idpusernameprefix) ? trim($idpusernameprefix) : '';
+        $issuerid = self::get_configured_issuer_id();
 
         // Retrieve all active, non-deleted users.
         $users = $DB->get_records('user', ['deleted' => 0, 'suspended' => 0], '', 'id, username, email');
@@ -161,10 +177,7 @@ class updatelinkedlogin {
                 'userid'               => $user->id,
                 'email'                => $user->email,
                 'username'             => $expectedidpusername,
-                // Issuer ID 1 is used for consistency with update_linkedlogin().
-                // Administrators should ensure the primary OAuth2 issuer has ID 1,
-                // or configure the issuer separately if needed.
-                'issuerid'             => 1,
+                'issuerid'             => $issuerid,
                 'timecreated'          => $now,
                 'timemodified'         => $now,
                 'confirmtoken'         => '',

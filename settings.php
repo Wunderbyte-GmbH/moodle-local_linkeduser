@@ -28,6 +28,29 @@ defined('MOODLE_INTERNAL') || die();
 if ($hassiteconfig) {
     $settings = new admin_settingpage('local_linkeduser', get_string('pluginname', 'local_linkeduser'));
 
+    // Build the list of available OAuth2 issuers for the dropdown.
+    $issueroptions = [];
+    try {
+        $issuers = $DB->get_records('oauth2_issuer', null, 'name ASC', 'id, name');
+        foreach ($issuers as $issuer) {
+            $issueroptions[$issuer->id] = $issuer->name;
+        }
+    } catch (\Exception $e) {
+        // Table may not be available during initial install; leave options empty.
+        $issueroptions = [];
+    }
+    if (empty($issueroptions)) {
+        $issueroptions[0] = get_string('none');
+    }
+
+    $settings->add(new admin_setting_configselect(
+        'local_linkeduser/issuerid',
+        get_string('issuerid', 'local_linkeduser'),
+        get_string('issuerid_desc', 'local_linkeduser'),
+        array_key_first($issueroptions),
+        $issueroptions
+    ));
+
     $settings->add(new admin_setting_configcheckbox(
         'local_linkeduser/useidpemail',
         get_string('useidpemail', 'local_linkeduser'),
