@@ -25,6 +25,8 @@
 
 namespace local_linkeduser;
 
+use core_user;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -56,9 +58,11 @@ class updatelinkedlogin {
 
         global $DB, $USER;
 
-        if (!$user = $DB->get_record('user', ['id' => $userid, 'auth' => 'oauth2'])) {
+        if ($user = $DB->get_record('user', ['id' => $userid, 'auth' => 'oauth2'])) {
             return false;
         }
+
+        $user = core_user::get_user($userid);
 
         // Determine the expected IdP username, applying any configured prefix.
         $idpusernameprefix = get_config('local_linkeduser', 'idpusernameprefix');
